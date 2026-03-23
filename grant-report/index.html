@@ -67,11 +67,17 @@
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
 
     async function init() {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) { liff.login(); return; }
-      const profile = await liff.getProfile();
-      document.getElementById('userId').value = profile.userId;
-      document.querySelector('[name="date"]').value = new Date().toISOString().split('T')[0];
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        var ctx = liff.getContext();
+        if (ctx && ctx.userId) {
+          document.getElementById('userId').value = ctx.userId;
+        } else if (liff.isLoggedIn()) {
+          var profile = await liff.getProfile();
+          document.getElementById('userId').value = profile.userId;
+        }
+        document.querySelector('[name="date"]').value = new Date().toISOString().split('T')[0];
+      } catch (e) { /* init error */ }
     }
 
     document.getElementById('form').addEventListener('submit', async (e) => {
@@ -83,20 +89,8 @@
       params.append('action', 'grant');
 
       try {
+        // GASにデータ送信（GAS側でpushMessageも実行される）
         await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
-
-        // LINEトークに送信内容をメッセージとして投稿
-        if (liff.isInClient()) {
-          const fd = new FormData(e.target);
-          const msgText = '✅ チケット付与報告を送信しました\n\n'
-            + '━━━━━━━━━━━━━━\n'
-            + '📍 店舗名: ' + (fd.get('storeName') || '') + '\n'
-            + '🎫 チケットID: ' + (fd.get('ticketId') || '') + '\n'
-            + '👤 付与先WL ID: ' + (fd.get('wlId') || '') + '\n'
-            + '📅 付与日: ' + (fd.get('date') || '') + '\n'
-            + '━━━━━━━━━━━━━━';
-          await liff.sendMessages([{ type: 'text', text: msgText }]);
-        }
 
         // 完了画面を表示
         document.getElementById('form').style.display = 'none';
@@ -104,7 +98,6 @@
         document.getElementById('doneScreen').style.display = 'block';
         setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); }, 3000);
       } catch (err) {
-        alert('通信エラーが発生しました。もう一度お試しください。');
         btn.disabled = false; btn.textContent = '付与報告を送信';
       }
     });
