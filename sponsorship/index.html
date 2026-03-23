@@ -212,11 +212,23 @@
     const LIFF_ID = '2009575513-pRqWROsZ';
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
 
+    let liffReady = false;
     async function init() {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) { liff.login(); return; }
-      const profile = await liff.getProfile();
-      document.getElementById('userId').value = profile.userId;
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        if (!liff.isLoggedIn()) {
+          liff.login({ redirectUri: location.href });
+          return;
+        }
+        liffReady = true;
+        try {
+          const profile = await liff.getProfile();
+          document.getElementById('userId').value = profile.userId;
+        } catch (e) { /* profile取得失敗は無視 */ }
+      } catch (e) {
+        document.getElementById('debugArea').style.display = 'block';
+        document.getElementById('debugArea').textContent = 'init error: ' + e.message;
+      }
     }
 
     // ===== 同意チェック → ボタン有効化 =====
@@ -281,8 +293,9 @@
 
         debugLog('3. isInClient=' + liff.isInClient());
         debugLog('4. isLoggedIn=' + liff.isLoggedIn());
+        debugLog('5. liffReady=' + liffReady);
 
-        if (liff.isInClient()) {
+        if (liff.isInClient() && liffReady) {
           const fd = new FormData(form);
           const msgText = '✅ 協賛申込を送信しました\n\n'
             + '━━━━━━━━━━━━━━\n'
