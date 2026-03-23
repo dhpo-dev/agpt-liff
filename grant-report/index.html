@@ -119,8 +119,17 @@
           return;
         }
 
-        // ② 問題なければ本送信（no-cors でGASに書き込み＋LINE通知）
-        await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
+        // ② 問題なければ本送信（GASに書き込み＋LINE通知）
+        const grantRes = await fetch(GAS_URL + '?' + params.toString());
+        const grantData = await grantRes.json();
+
+        if (grantData.error) {
+          ticketError.textContent = grantData.error;
+          ticketError.style.display = 'block';
+          ticketInput.classList.add('error-field');
+          btn.disabled = false; btn.textContent = '付与報告を送信';
+          return;
+        }
 
         // 完了画面を表示
         document.getElementById('form').style.display = 'none';
