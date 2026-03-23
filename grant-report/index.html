@@ -84,7 +84,21 @@
 
       try {
         await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
-        // 送信成功 → 完了画面を表示
+
+        // LINEトークに送信内容をメッセージとして投稿
+        if (liff.isInClient()) {
+          const fd = new FormData(e.target);
+          const msgText = '✅ チケット付与報告を送信しました\n\n'
+            + '━━━━━━━━━━━━━━\n'
+            + '📍 店舗名: ' + (fd.get('storeName') || '') + '\n'
+            + '🎫 チケットID: ' + (fd.get('ticketId') || '') + '\n'
+            + '👤 付与先WL ID: ' + (fd.get('wlId') || '') + '\n'
+            + '📅 付与日: ' + (fd.get('date') || '') + '\n'
+            + '━━━━━━━━━━━━━━';
+          await liff.sendMessages([{ type: 'text', text: msgText }]);
+        }
+
+        // 完了画面を表示
         document.getElementById('form').style.display = 'none';
         document.querySelector('h1').style.display = 'none';
         document.getElementById('doneScreen').style.display = 'block';
