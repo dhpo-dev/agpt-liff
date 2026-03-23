@@ -195,9 +195,6 @@
     </div>
   </div>
 
-  <!-- ===== デバッグ表示エリア ===== -->
-  <div id="debugArea" style="background:#FFF3E0;border:2px solid #FF9800;border-radius:8px;padding:12px;margin:12px 0;font-size:12px;font-family:monospace;white-space:pre-wrap;display:none;max-height:300px;overflow-y:auto;"></div>
-
   <!-- ===== 完了画面 ===== -->
   <div id="doneScreen" style="display:none;">
     <div class="done-card">
@@ -212,23 +209,18 @@
     const LIFF_ID = '2009575513-pRqWROsZ';
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
 
-    let liffReady = false;
     async function init() {
       try {
         await liff.init({ liffId: LIFF_ID });
-        if (!liff.isLoggedIn()) {
-          liff.login({ redirectUri: location.href });
-          return;
-        }
-        liffReady = true;
-        try {
-          const profile = await liff.getProfile();
+        // getContext()はログイン不要でuserIdを取得できる
+        var ctx = liff.getContext();
+        if (ctx && ctx.userId) {
+          document.getElementById('userId').value = ctx.userId;
+        } else if (liff.isLoggedIn()) {
+          var profile = await liff.getProfile();
           document.getElementById('userId').value = profile.userId;
-        } catch (e) { /* profile取得失敗は無視 */ }
-      } catch (e) {
-        document.getElementById('debugArea').style.display = 'block';
-        document.getElementById('debugArea').textContent = 'init error: ' + e.message;
-      }
+        }
+      } catch (e) { /* init error */ }
     }
 
     // ===== 同意チェック → ボタン有効化 =====
@@ -279,50 +271,17 @@
       params.append('agreedToTerms', 'true');
       params.append('agreedAt', new Date().toISOString());
 
-      // デバッグ表示関数
-      const dbg = document.getElementById('debugArea');
-      function debugLog(msg) {
-        dbg.style.display = 'block';
-        dbg.textContent += msg + '\n';
-      }
-
       try {
-        debugLog('1. GASに送信開始...');
+        // GASにデータ送信（GAS側でpushMessageも実行される）
         await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
-        debugLog('2. GAS送信完了');
 
-        debugLog('3. isInClient=' + liff.isInClient());
-        debugLog('4. isLoggedIn=' + liff.isLoggedIn());
-        debugLog('5. liffReady=' + liffReady);
-
-        if (liff.isInClient() && liffReady) {
-          const fd = new FormData(form);
-          const msgText = '✅ 協賛申込を送信しました\n\n'
-            + '━━━━━━━━━━━━━━\n'
-            + '📍 店舗名: ' + (fd.get('storeName') || '') + '\n'
-            + '📞 電話番号: ' + (fd.get('phone') || '') + '\n'
-            + '📧 メール: ' + (fd.get('email') || '') + '\n'
-            + '📋 プラン: ' + (fd.get('plan') || '') + '\n'
-            + '🏠 住所: ' + (fd.get('address') || '') + '\n'
-            + (fd.get('note') ? '📝 備考: ' + fd.get('note') + '\n' : '')
-            + '━━━━━━━━━━━━━━\n\n'
-            + '審査後にご連絡いたします。';
-          debugLog('5. sendMessages呼び出し...');
-          try {
-            await liff.sendMessages([{ type: 'text', text: msgText }]);
-            debugLog('6. sendMessages成功!');
-          } catch (sendErr) {
-            debugLog('6. sendMessagesエラー: ' + sendErr.message);
-          }
-        } else {
-          debugLog('5. isInClient=falseのためスキップ');
-        }
-
-        // 完了画面は表示しない（デバッグ情報を見るため）
-        debugLog('--- 完了 ---');
+        // 完了画面を表示
         confirmOverlay.classList.remove('active');
+        form.style.display = 'none';
+        document.querySelector('h1').style.display = 'none';
+        document.getElementById('doneScreen').style.display = 'block';
+        setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); }, 3000);
       } catch (err) {
-        debugLog('エラー: ' + err.message);
         btn.disabled = false; btn.textContent = '申込を確定する';
       }
     });
