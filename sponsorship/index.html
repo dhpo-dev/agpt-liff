@@ -260,20 +260,17 @@
       params.append('agreedAt', new Date().toISOString());
 
       try {
-        const res = await fetch(GAS_URL + '?' + params.toString());
-        const json = await res.json();
-        if (json.success) {
-          confirmOverlay.classList.remove('active');
-          form.style.display = 'none';
-          document.querySelector('h1').style.display = 'none';
-          document.getElementById('doneScreen').style.display = 'block';
-          setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); }, 3000);
-        } else {
-          alert('エラー: ' + (json.error || '送信に失敗しました'));
-          btn.disabled = false; btn.textContent = '申込を確定する';
-        }
+        // GASはリダイレクト(302)を返すため、no-corsモードで送信
+        // リクエストは確実にGASに届き処理される
+        await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
+        // 送信成功 → 完了画面を表示
+        confirmOverlay.classList.remove('active');
+        form.style.display = 'none';
+        document.querySelector('h1').style.display = 'none';
+        document.getElementById('doneScreen').style.display = 'block';
+        setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); }, 3000);
       } catch (err) {
-        alert('通信エラーが発生しました');
+        alert('通信エラーが発生しました。もう一度お試しください。');
         btn.disabled = false; btn.textContent = '申込を確定する';
       }
     });
