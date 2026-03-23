@@ -94,27 +94,33 @@
       ticketInput.classList.remove('error-field');
       ticketError.style.display = 'none';
 
+      const ticketIdVal = ticketInput.value.trim();
       const params = new URLSearchParams(new FormData(e.target));
       params.append('action', 'grant');
 
       try {
-        const res = await fetch(GAS_URL + '?' + params.toString());
-        const data = await res.json();
+        // ① チケットID存在確認（GASから直接JSONを取得）
+        const checkRes = await fetch(GAS_URL + '?action=checkTicket&ticketId=' + encodeURIComponent(ticketIdVal));
+        const checkData = await checkRes.json();
 
-        if (data.error) {
-          // エラーの種類に応じてメッセージを表示
-          if (data.error === 'チケットIDが見つかりません') {
-            ticketError.textContent = 'チケットIDが存在しません';
-            ticketError.style.display = 'block';
-            ticketInput.classList.add('error-field');
-          } else {
-            ticketError.textContent = data.error;
-            ticketError.style.display = 'block';
-            ticketInput.classList.add('error-field');
-          }
+        if (!checkData.exists) {
+          ticketError.textContent = 'チケットIDが存在しません';
+          ticketError.style.display = 'block';
+          ticketInput.classList.add('error-field');
           btn.disabled = false; btn.textContent = '付与報告を送信';
           return;
         }
+
+        if (checkData.status !== '配送済') {
+          ticketError.textContent = 'このチケットは報告できません（ステータス: ' + checkData.status + '）';
+          ticketError.style.display = 'block';
+          ticketInput.classList.add('error-field');
+          btn.disabled = false; btn.textContent = '付与報告を送信';
+          return;
+        }
+
+        // ② 問題なければ本送信（no-cors でGASに書き込み＋LINE通知）
+        await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
 
         // 完了画面を表示
         document.getElementById('form').style.display = 'none';
@@ -122,6 +128,8 @@
         document.getElementById('doneScreen').style.display = 'block';
         setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); }, 3000);
       } catch (err) {
+        ticketError.textContent = '通信エラーが発生しました。再度お試しください。';
+        ticketError.style.display = 'block';
         btn.disabled = false; btn.textContent = '付与報告を送信';
       }
     });
