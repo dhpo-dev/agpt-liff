@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGPT 付与報告</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #f5f5f5; padding: 16px; }
+    h1 { font-size: 20px; color: #FF9800; text-align: center; margin: 16px 0; }
+    .form-group { margin: 12px 0; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #333; margin-bottom: 4px; }
+    .required::after { content: " *"; color: #E91E63; }
+    input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;
+      font-size: 16px; -webkit-appearance: none; }
+    input:focus { border-color: #FF9800; outline: none; }
+    button[type="submit"] { width: 100%; padding: 14px; background: #FF9800; color: #fff; border: none;
+      border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+    button:disabled { background: #ccc; }
+    .status { text-align: center; padding: 20px; font-size: 14px; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>📋 チケット付与報告</h1>
+  <form id="form">
+    <input type="hidden" id="userId" name="userId">
+
+    <div class="form-group">
+      <label class="required">チケットID</label>
+      <input name="ticketId" id="ticketId" placeholder="例: AGPT-2026-0001" required>
+    </div>
+    <div class="form-group">
+      <label class="required">付与先 Waitinglist ID</label>
+      <input name="wlId" placeholder="例: WL-12345" required>
+    </div>
+    <div class="form-group">
+      <label class="required">付与日</label>
+      <input name="date" type="date" required>
+    </div>
+
+    <button type="submit">付与報告を送信</button>
+  </form>
+  <div id="status" class="status" style="display:none"></div>
+
+  <script>
+    // ★ ここを書き換えてください
+    const LIFF_ID = 'YOUR_LIFF_ID';
+    const GAS_URL = 'YOUR_GAS_DEPLOY_URL';
+
+    async function init() {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) { liff.login(); return; }
+      const profile = await liff.getProfile();
+      document.getElementById('userId').value = profile.userId;
+      document.querySelector('[name="date"]').value = new Date().toISOString().split('T')[0];
+    }
+
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = '送信中...';
+
+      const params = new URLSearchParams(new FormData(e.target));
+      params.append('action', 'grant');
+
+      try {
+        const res = await fetch(GAS_URL + '?' + params.toString());
+        const json = await res.json();
+        if (json.success) {
+          document.getElementById('form').style.display = 'none';
+          document.getElementById('status').style.display = 'block';
+          document.getElementById('status').innerHTML = '✅ 付与報告完了！';
+          setTimeout(() => liff.closeWindow(), 2000);
+        } else {
+          alert('エラー: ' + json.error);
+          btn.disabled = false; btn.textContent = '付与報告を送信';
+        }
+      } catch (err) {
+        alert('通信エラーが発生しました');
+        btn.disabled = false; btn.textContent = '付与報告を送信';
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>
