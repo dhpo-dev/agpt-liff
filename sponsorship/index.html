@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AGPT åè³ãã©ã³ç³è¾¼ãã©ã¼ã </title>
+<title>AGPT 協賛プラン申込フォーム</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js" charset="utf-8"></script>
 <style>
@@ -41,7 +41,7 @@
     min-height: 100vh;
   }
 
-  /* ââ Subtle dot pattern ââ */
+  /* ── Subtle dot pattern ── */
   body::before {
     content: '';
     position: fixed;
@@ -57,7 +57,7 @@
 
   .page { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 48px 20px 64px; }
 
-  /* ââ Header ââ */
+  /* ── Header ── */
   .header { text-align: center; margin-bottom: 44px; }
   .header-logo-img {
     display: block; max-width: 280px; height: auto; margin: 0 auto 20px;
@@ -66,7 +66,7 @@
   .header-title { font-size: 20px; font-weight: 600; letter-spacing: 2px; margin-bottom: 6px; }
   .header-sub { font-size: 13px; font-weight: 300; color: var(--text-sub); }
 
-  /* ââ Section card ââ */
+  /* ── Section card ── */
   .section {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -84,7 +84,7 @@
   }
   .section-title { font-size: 16px; font-weight: 600; letter-spacing: 1px; margin-bottom: 20px; }
 
-  /* ââ Field ââ */
+  /* ── Field ── */
   .field { margin-bottom: 18px; }
   .field:last-child { margin-bottom: 0; }
   .label {
@@ -121,7 +121,7 @@
 
   .hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
 
-  /* ââ Plan cards ââ */
+  /* ── Plan cards ── */
   .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 520px) { .plans { grid-template-columns: 1fr; } }
 
@@ -181,7 +181,7 @@
   .plan[data-p="premium"]  .plan-slots { background: rgba(212,168,67,0.1); color: var(--plan-premium); }
 
 
-  /* ââ Terms ââ */
+  /* ── Terms ── */
   .terms-box {
     max-height: 360px; overflow-y: auto; padding: 18px;
     background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius);
@@ -206,7 +206,7 @@
   .check-row input:checked + .ck svg { opacity: 1; }
   .check-text { font-size: 13px; color: var(--text-sub); }
 
-  /* ââ Submit ââ */
+  /* ── Submit ── */
   .submit-area { text-align: center; margin-top: 32px; }
   .btn {
     display: inline-block; min-width: 260px; padding: 14px 48px;
@@ -220,7 +220,7 @@
   .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
   .note { font-size: 11px; color: var(--text-muted); margin-top: 14px; line-height: 1.7; }
 
-  /* ââ Footer ââ */
+  /* ── Footer ── */
   .footer {
     text-align: center; margin-top: 44px; padding-top: 20px;
     border-top: 1px solid var(--border);
@@ -228,7 +228,7 @@
   .footer-logo { font-size: 14px; font-weight: 700; letter-spacing: 6px; color: var(--text-muted); margin-bottom: 4px; }
   .footer-text { font-size: 10px; color: var(--text-muted); }
 
-  /* ââ Fade-in ââ */
+  /* ── Fade-in ── */
   @keyframes up { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
   .section { animation: up .45s ease-out both; }
   .section:nth-child(2) { animation-delay: .06s; }
@@ -236,7 +236,7 @@
   .section:nth-child(4) { animation-delay: .18s; }
   .section:nth-child(5) { animation-delay: .24s; }
 
-  /* ââ Confirm overlay ââ */
+  /* ── Confirm overlay ── */
   .overlay {
     display: none;
     position: fixed; inset: 0; z-index: 100;
@@ -286,7 +286,7 @@
   .btn-confirm:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(95,179,177,0.32); }
   .btn-confirm:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  /* ââ Done screen ââ */
+  /* ── Done screen ── */
   .done-screen {
     display: none;
     position: fixed; inset: 0; z-index: 200;
@@ -306,7 +306,7 @@
   .done-text { font-size: 14px; color: var(--text-sub); line-height: 1.8; margin-bottom: 8px; }
   .done-note { font-size: 12px; color: var(--text-muted); }
 
-  /* ââ Loading spinner ââ */
+  /* ── Loading spinner ── */
   .spinner {
     display: none; width: 24px; height: 24px;
     border: 2.5px solid rgba(10,30,34,0.3);
@@ -337,135 +337,135 @@
   <header class="header">
     <img src="./agpt_logo.png" alt="AGPT - Asia Grand Poker Tournament" class="header-logo-img">
     <div class="header-line"></div>
-    <h1 class="header-title">åè³ãã©ã³ç³è¾¼ãã©ã¼ã </h1>
-    <p class="header-sub">ä»¥ä¸ã®é ç®ããå¥åã®ä¸ããç³ãè¾¼ã¿ãã ãã</p>
+    <h1 class="header-title">協賛プラン申込フォーム</h1>
+    <p class="header-sub">以下の項目をご入力の上、お申し込みください</p>
   </header>
 
   <form id="f" novalidate>
     <input type="hidden" name="userId" id="userId" value="">
 
-    <!-- åºèæå ± -->
+    <!-- 店舗情報 -->
     <div class="section">
       <div class="section-tag">Store Information</div>
-      <h2 class="section-title">åºèæå ±</h2>
+      <h2 class="section-title">店舗情報</h2>
 
       <div class="field">
-        <label class="label">åºèå <span class="req">å¿é </span></label>
-        <input type="text" name="storeName" placeholder="ä¾ï¼ãã¼ã«ã¼ã¹ã¿ã¸ãªæ¸è°·" required>
+        <label class="label">店舗名 <span class="req">必須</span></label>
+        <input type="text" name="storeName" placeholder="例：ポーカースタジオ渋谷" required>
       </div>
 
       <div class="row2">
         <div class="field">
-          <label class="label">é»è©±çªå· <span class="req">å¿é </span></label>
+          <label class="label">電話番号 <span class="req">必須</span></label>
           <input type="tel" name="phone" placeholder="03-1234-5678" required>
         </div>
         <div class="field">
-          <label class="label">ã¡ã¼ã«ã¢ãã¬ã¹ <span class="req">å¿é </span></label>
+          <label class="label">メールアドレス <span class="req">必須</span></label>
           <input type="email" name="email" placeholder="example@store.com" required>
         </div>
       </div>
     </div>
 
-    <!-- åè³ãã©ã³é¸æ -->
+    <!-- 協賛プラン選択 -->
     <div class="section">
       <div class="section-tag">Sponsorship Plan</div>
-      <h2 class="section-title">åè³ãã©ã³ã®é¸æ</h2>
+      <h2 class="section-title">協賛プランの選択</h2>
 
       <div class="plans">
 
         <label class="plan" data-p="basic">
-          <input type="radio" name="plan" value="ãã¼ã·ãã¯ï¼20ä¸åï¼" required>
+          <input type="radio" name="plan" value="ベーシック（20万円）" required>
           <div class="dot"></div>
-          <div class="plan-name">ãã¼ã·ãã¯</div>
-          <div class="plan-price-row"><span class="plan-price">Â¥200,000</span><span class="plan-tax">ï¼ç¨å¥ï¼</span></div>
-          <div class="plan-feat">HPã­ã´æ²è¼ï¼å°ï¼</div>
-          <div class="plan-slots">æå¾ãã±ãã 10æ</div>
+          <div class="plan-name">ベーシック</div>
+          <div class="plan-price-row"><span class="plan-price">¥200,000</span><span class="plan-tax">（税別）</span></div>
+          <div class="plan-feat">HPロゴ掲載（小）</div>
+          <div class="plan-slots">招待チケット 10枚</div>
         </label>
 
         <label class="plan" data-p="light">
-          <input type="radio" name="plan" value="ã©ã¤ãï¼52.5ä¸åï¼" required>
+          <input type="radio" name="plan" value="ライト（52.5万円）" required>
           <div class="dot"></div>
-          <div class="plan-name">ã©ã¤ã</div>
-          <div class="plan-price-row"><span class="plan-price">Â¥525,000</span><span class="plan-tax">ï¼ç¨å¥ï¼</span></div>
-          <div class="plan-feat">HPã­ã´æ²è¼ï¼å°ï¼</div>
-          <div class="plan-slots">æå¾ãã±ãã 30æ</div>
+          <div class="plan-name">ライト</div>
+          <div class="plan-price-row"><span class="plan-price">¥525,000</span><span class="plan-tax">（税別）</span></div>
+          <div class="plan-feat">HPロゴ掲載（小）</div>
+          <div class="plan-slots">招待チケット 30枚</div>
         </label>
 
         <label class="plan" data-p="standard">
-          <input type="radio" name="plan" value="ã¹ã¿ã³ãã¼ãï¼75ä¸åï¼" required>
+          <input type="radio" name="plan" value="スタンダード（75万円）" required>
           <div class="dot"></div>
-          <div class="plan-name">ã¹ã¿ã³ãã¼ã</div>
-          <div class="plan-price-row"><span class="plan-price">Â¥750,000</span><span class="plan-tax">ï¼ç¨å¥ï¼</span></div>
-          <div class="plan-feat">HPã­ã´æ²è¼ï¼å¤§ï¼</div>
-          <div class="plan-slots">æå¾ãã±ãã 60æ</div>
+          <div class="plan-name">スタンダード</div>
+          <div class="plan-price-row"><span class="plan-price">¥750,000</span><span class="plan-tax">（税別）</span></div>
+          <div class="plan-feat">HPロゴ掲載（大）</div>
+          <div class="plan-slots">招待チケット 60枚</div>
         </label>
 
         <label class="plan" data-p="premium">
-          <input type="radio" name="plan" value="ãã¬ãã¢ã ï¼140ä¸åï¼" required>
+          <input type="radio" name="plan" value="プレミアム（140万円）" required>
           <div class="dot"></div>
-          <div class="plan-name">ãã¬ãã¢ã </div>
-          <div class="plan-price-row"><span class="plan-price">Â¥1,400,000</span><span class="plan-tax">ï¼ç¨å¥ï¼</span></div>
-          <div class="plan-feat">HPã­ã´æ²è¼ï¼å¤§ï¼ã»ä¼å ´ã­ã´æ²è¼</div>
-          <div class="plan-slots">æå¾ãã±ãã 100æ</div>
+          <div class="plan-name">プレミアム</div>
+          <div class="plan-price-row"><span class="plan-price">¥1,400,000</span><span class="plan-tax">（税別）</span></div>
+          <div class="plan-feat">HPロゴ掲載（大）・会場ロゴ掲載</div>
+          <div class="plan-slots">招待チケット 100枚</div>
         </label>
 
       </div>
     </div>
 
-    <!-- ãã±ããéä»å -->
+    <!-- チケット送付先 -->
     <div class="section">
       <div class="section-tag">Shipping Address</div>
-      <h2 class="section-title">ãã±ããéä»å</h2>
+      <h2 class="section-title">チケット送付先</h2>
 
       <div class="row2">
         <div class="field">
-          <label class="label">éµä¾¿çªå· <span class="req">å¿é </span></label>
-          <input type="text" name="zip" placeholder="ä¾ï¼150-0002" required>
+          <label class="label">郵便番号 <span class="req">必須</span></label>
+          <input type="text" name="zip" placeholder="例：150-0002" required>
         </div>
         <div class="field"></div>
       </div>
 
       <div class="field">
-        <label class="label">ä½æ <span class="req">å¿é </span></label>
-        <input type="text" name="address" placeholder="ä¾ï¼æ±äº¬é½æ¸è°·åºæ¸è°·1-2-3 ãããã«5F" required>
+        <label class="label">住所 <span class="req">必須</span></label>
+        <input type="text" name="address" placeholder="例：東京都渋谷区渋谷1-2-3 〇〇ビル5F" required>
       </div>
     </div>
 
-    <!-- åè -->
+    <!-- 備考 -->
     <div class="section">
       <div class="section-tag">Notes</div>
-      <h2 class="section-title">åè</h2>
+      <h2 class="section-title">備考</h2>
 
       <div class="field">
-        <label class="label">åèã»ãè³ªå <span class="opt">ä»»æ</span></label>
-        <textarea name="note" placeholder="ãä¸æç¹ããè¦æããããã¾ããããè¨å¥ãã ãã"></textarea>
+        <label class="label">備考・ご質問 <span class="opt">任意</span></label>
+        <textarea name="note" placeholder="ご不明点やご要望がございましたらご記入ください"></textarea>
       </div>
     </div>
 
-    <!-- å©ç¨è¦ç´ -->
+    <!-- 利用規約 -->
     <div class="section">
       <div class="section-tag">Terms &amp; Conditions</div>
-      <h2 class="section-title">å©ç¨è¦ç´</h2>
+      <h2 class="section-title">利用規約</h2>
 
       <div class="terms-box">
-        <strong>AGPT åè³ãã©ã³ç³è¾¼è¦ç´</strong><br><br>
-        ç¬¬1æ¡ï¼ç®çï¼<br>
-        æ¬è¦ç´ã¯ãAGPTéå¶ï¼ä»¥ä¸ãç²ãï¼ã¨åè³åºèï¼ä»¥ä¸ãä¹ãï¼éã®åè³ãã©ã³ç³è¾¼ã«é¢ããæ¡ä»¶ãå®ãã¾ãã<br><br>
-        ç¬¬2æ¡ï¼ç³è¾¼æ¹æ³ï¼<br>
-        ä¹ã¯ãç²ã®æå®ãããã©ã¼ã ã«å¿è¦äºé ãå¥åãéä¿¡ãããã¨ã«ãããåè³ãã©ã³ã®ç³è¾¼ãè¡ãã¾ãããã©ã¼ã éä¿¡ããã£ã¦ç³è¾¼ã®å°éã¨ããç²ãæ¿è«¾ããæç¹ã§å¥ç´ãæç«ãã¾ãã<br><br>
-        ç¬¬3æ¡ï¼ç¢ºèªï¼<br>
-        ç²ã¯ç³è¾¼åä»å¾ã5å¶æ¥­æ¥ä»¥åã«ç¢ºèªã¡ãã»ã¼ã¸ãéä»ãã¾ãã<br><br>
-        ç¬¬4æ¡ï¼æ¤åã»å¤æ´ï¼<br>
-        ä¹ã¯ãç²ãæ¿è«¾éç¥ãçºããã¾ã§ã®éãç³è¾¼ã®æ¤åã¾ãã¯å¤æ´ãè¡ããã¨ãã§ãã¾ãã<br><br>
-        ç¬¬5æ¡ï¼ç¦æ­¢äºé ï¼<br>
-        æå¾ãã±ããã®å£²è²·ãè­²æ¸¡ãæéãåç¾©è²¸ãã¯ç¦æ­¢ããã¦ãã¾ãã<br><br>
-        ç¬¬6æ¡ï¼ãã±ããã®åãæ±ãï¼<br>
-        æå¾ãã±ããã¯éå£²åã§ããæå¹æéã¯çºè¡æ¥ãã6ã¶æéã¨ããç´å¤±æã¯ä¸å¾ç¡å¹ã¨ãªãã¾ããæ¬äººç¢ºèªã¯Waitinglist IDã«ã¦è¡ãã¾ãã<br><br>
-        ç¬¬7æ¡ï¼åè²¬äºé ï¼<br>
-        ãã¼ãã¡ã³ãã®ä¸­æ­¢ã»å»¶æç­ã«ããæå®³ã«ã¤ãã¦ãç²ã¯ä¸åã®è²¬ä»»ãè² ãã¾ããã<br><br>
-        ç¬¬12æ¡ï¼åºæ¬å¥ç´ã¨ã®é¢ä¿ï¼<br>
-        æ¬è¦ç´ã«å®ãã®ãªãäºé ã¯åºæ¬å¥ç´ã®å®ãã«å¾ãã¾ããæ¬è¦ç´ã¨åºæ¬å¥ç´ã®åå®¹ãçç¾ããå ´åã¯ãåºæ¬å¥ç´ãåªåããã¾ãã<br><br>
-        â» å¨æã¯åºæ¬å¥ç´æ¸ã®å¥ç´ããåç§ãã ããã
+        <strong>AGPT 協賛プラン申込規約</strong><br><br>
+        第1条（目的）<br>
+        本規約は、AGPT運営（以下「甲」）と協賛店舗（以下「乙」）間の協賛プラン申込に関する条件を定めます。<br><br>
+        第2条（申込方法）<br>
+        乙は、甲の指定するフォームに必要事項を入力し送信することにより、協賛プランの申込を行います。フォーム送信をもって申込の到達とし、甲が承諾した時点で契約が成立します。<br><br>
+        第3条（確認）<br>
+        甲は申込受付後、5営業日以内に確認メッセージを送付します。<br><br>
+        第4条（撤回・変更）<br>
+        乙は、甲が承諾通知を発するまでの間、申込の撤回または変更を行うことができます。<br><br>
+        第5条（禁止事項）<br>
+        招待チケットの売買、譲渡、換金、名義貸しは禁止されています。<br><br>
+        第6条（チケットの取り扱い）<br>
+        招待チケットは非売品です。有効期限は発行日から6ヶ月間とし、紛失時は一律無効となります。本人確認はWaitinglist IDにて行います。<br><br>
+        第7条（免責事項）<br>
+        トーナメントの中止・延期等による損害について、甲は一切の責任を負いません。<br><br>
+        第12条（基本契約との関係）<br>
+        本規約に定めのない事項は基本契約の定めに従います。本規約と基本契約の内容が矛盾する場合は、基本契約が優先されます。<br><br>
+        ※ 全文は基本契約書の別紙をご参照ください。
       </div>
 
       <div class="field">
@@ -474,17 +474,17 @@
           <span class="ck">
             <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
-          <span class="check-text">ä¸è¨ã®å©ç¨è¦ç´ã«åæãã¾ã</span>
+          <span class="check-text">上記の利用規約に同意します</span>
         </label>
       </div>
     </div>
 
-    <!-- éä¿¡ -->
+    <!-- 送信 -->
     <div class="submit-area">
-      <button type="submit" class="btn" id="btn" disabled>ç³ãè¾¼ã</button>
+      <button type="submit" class="btn" id="btn" disabled>申し込む</button>
       <p class="note">
-        éä¿¡å¾ãéå¶äºåå±ãã5å¶æ¥­æ¥ä»¥åã«ãé£çµ¡ãããã¾ãã<br>
-        â» ãã©ã¼ã éä¿¡ããã£ã¦ç³è¾¼ã®å°éã¨ããéå¶ãæ¿è«¾ããæç¹ã§å¥ç´ãæç«ãã¾ãã
+        送信後、運営事務局より5営業日以内にご連絡いたします。<br>
+        ※ フォーム送信をもって申込の到達とし、運営が承諾した時点で契約が成立します。
       </p>
     </div>
 
@@ -500,11 +500,11 @@
 <!-- ===== CONFIRM OVERLAY ===== -->
 <div class="overlay" id="confirmOverlay">
   <div class="overlay-inner">
-    <div class="overlay-title">å¥ååå®¹ã®ç¢ºèª</div>
+    <div class="overlay-title">入力内容の確認</div>
     <div id="confirmBody"></div>
     <div class="overlay-buttons">
-      <button type="button" class="btn-back" id="backBtn">ä¿®æ­£ãã</button>
-      <button type="button" class="btn-confirm" id="confirmBtn">ãã®åå®¹ã§ç³ãè¾¼ã</button>
+      <button type="button" class="btn-back" id="backBtn">修正する</button>
+      <button type="button" class="btn-confirm" id="confirmBtn">この内容で申し込む</button>
     </div>
     <div class="spinner" id="spinner"></div>
   </div>
@@ -516,31 +516,31 @@
     <div class="done-icon">
       <svg viewBox="0 0 36 36" fill="none"><path d="M8 18l8 8 12-12" stroke="#5FB3B1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
-    <div class="done-title">ãç³ãè¾¼ã¿ãããã¨ããããã¾ã</div>
+    <div class="done-title">お申し込みありがとうございます</div>
     <div class="done-text">
-      éå¶äºåå±ãã5å¶æ¥­æ¥ä»¥åã«<br>ãé£çµ¡ãããã¾ãã
+      運営事務局より5営業日以内に<br>ご連絡いたします。
     </div>
-    <div class="done-note">ãã®ç»é¢ã¯èªåçã«éãããã¾ã</div>
+    <div class="done-note">この画面は自動的に閉じられます</div>
   </div>
 </div>
 
 <script>
-  // ââ LIFF Config ââ
+  // ── LIFF Config ──
   const LIFF_ID = '2009575513-bf0DhX1A';
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
 
-  // ââ Field labels for confirm screen ââ
+  // ── Field labels for confirm screen ──
   const fieldLabels = {
-    storeName: 'åºèå',
-    phone: 'é»è©±çªå·',
-    email: 'ã¡ã¼ã«ã¢ãã¬ã¹',
-    plan: 'åè³ãã©ã³',
-    zip: 'éµä¾¿çªå·',
-    address: 'ä½æ',
-    note: 'åè'
+    storeName: '店舗名',
+    phone: '電話番号',
+    email: 'メールアドレス',
+    plan: '協賛プラン',
+    zip: '郵便番号',
+    address: '住所',
+    note: '備考'
   };
 
-  // ââ LIFF Init ââ
+  // ── LIFF Init ──
   function initLiff() {
     if (typeof liff === 'undefined') {
       console.warn('LIFF SDK not loaded. Running in standalone mode.');
@@ -574,7 +574,7 @@
     initLiff();
   }
 
-  // ââ DOM refs ââ
+  // ── DOM refs ──
   const form = document.getElementById('f');
   const btn = document.getElementById('btn');
   const confirmOverlay = document.getElementById('confirmOverlay');
@@ -584,7 +584,7 @@
   const spinner = document.getElementById('spinner');
   const doneScreen = document.getElementById('doneScreen');
 
-  // ââ Plan selection ââ
+  // ── Plan selection ──
   document.querySelectorAll('.plan').forEach(c => {
     c.addEventListener('click', () => {
       document.querySelectorAll('.plan').forEach(p => p.classList.remove('on'));
@@ -594,7 +594,7 @@
     });
   });
 
-  // ââ Validation ââ
+  // ── Validation ──
   function validate() {
     let ok = true;
     form.querySelectorAll('[required]').forEach(el => {
@@ -610,7 +610,7 @@
   form.addEventListener('input', validate);
   form.addEventListener('change', validate);
 
-  // ââ Form submit â show confirm overlay ââ
+  // ── Form submit → show confirm overlay ──
   form.addEventListener('submit', e => {
     e.preventDefault();
     showConfirm();
@@ -638,26 +638,26 @@
     return d.innerHTML;
   }
 
-  // ââ Back button ââ
+  // ── Back button ──
   backBtn.addEventListener('click', () => {
     confirmOverlay.classList.remove('show');
   });
 
-  // ââ Build LINE message text from form data ââ
+  // ── Build LINE message text from form data ──
   function buildMessageText(fd) {
-    let lines = ['ãAGPT åè³ãã©ã³ç³è¾¼ã', ''];
+    let lines = ['【AGPT 協賛プラン申込】', ''];
     for (const key in fieldLabels) {
       const val = fd.get(key) || '';
       if (val) {
-        lines.push(fieldLabels[key] + 'ï¼' + val);
+        lines.push(fieldLabels[key] + '：' + val);
       }
     }
     lines.push('');
-    lines.push('ç³è¾¼æ¥æï¼' + new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }));
+    lines.push('申込日時：' + new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }));
     return lines.join('\n');
   }
 
-  // ââ Send LINE message via liff.sendMessages ââ
+  // ── Send LINE message via liff.sendMessages ──
   async function sendLineMessage(fd) {
     if (typeof liff === 'undefined' || !liff.isInClient || !liff.isInClient()) {
       console.warn('Not in LIFF client. Skipping sendMessages.');
@@ -673,7 +673,7 @@
     }
   }
 
-  // ââ Confirm â submit to GAS + send LINE message ââ
+  // ── Confirm → submit to GAS + send LINE message ──
   confirmBtn.addEventListener('click', async () => {
     confirmBtn.disabled = true;
     backBtn.style.display = 'none';
@@ -689,19 +689,19 @@
     params.append('agreedAt', new Date().toISOString());
 
     try {
-      // GASéä¿¡
+      // GAS送信
       await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
     } catch (err) {
       console.warn('GAS submit error:', err);
     }
 
-    // LINEã¡ãã»ã¼ã¸éä¿¡
+    // LINEメッセージ送信
     await sendLineMessage(fd);
 
     showDone();
   });
 
-  // ââ Done screen ââ
+  // ── Done screen ──
   function showDone() {
     confirmOverlay.classList.remove('show');
     doneScreen.classList.add('show');
