@@ -180,11 +180,6 @@
   .plan[data-p="premium"]  .plan-name, .plan[data-p="premium"]  .plan-price { color: var(--plan-premium); }
   .plan[data-p="premium"]  .plan-slots { background: rgba(212,168,67,0.1); color: var(--plan-premium); }
 
-  .badge {
-    position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
-    font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
-    padding: 2px 12px; border-radius: 20px; color: #fff; white-space: nowrap;
-  }
 
   /* ── Terms ── */
   .terms-box {
@@ -648,8 +643,38 @@
     confirmOverlay.classList.remove('show');
   });
 
-  // ── Confirm → submit to GAS ──
-  confirmBtn.addEventListener('click', () => {
+  // ── Build LINE message text from form data ──
+  function buildMessageText(fd) {
+    let lines = ['【AGPT 協賛プラン申込】', ''];
+    for (const key in fieldLabels) {
+      const val = fd.get(key) || '';
+      if (val) {
+        lines.push(fieldLabels[key] + '：' + val);
+      }
+    }
+    lines.push('');
+    lines.push('申込日時：' + new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }));
+    return lines.join('\n');
+  }
+
+  // ── Send LINE message via liff.sendMessages ──
+  async function sendLineMessage(fd) {
+    if (typeof liff === 'undefined' || !liff.isInClient || !liff.isInClient()) {
+      console.warn('Not in LIFF client. Skipping sendMessages.');
+      return;
+    }
+    try {
+      await liff.sendMessages([{
+        type: 'text',
+        text: buildMessageText(fd)
+      }]);
+    } catch (e) {
+      console.warn('sendMessages error:', e);
+    }
+  }
+
+  // ── Confirm → submit to GAS + send LINE message ──
+  confirmBtn.addEventListener('click', async () => {
     confirmBtn.disabled = true;
     backBtn.style.display = 'none';
     spinner.classList.add('show');
@@ -663,14 +688,17 @@
     params.append('agreedToTerms', 'true');
     params.append('agreedAt', new Date().toISOString());
 
-    fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' })
-      .then(() => {
-        showDone();
-      })
-      .catch(err => {
-        console.error('Submit error:', err);
-        showDone(); // GAS no-cors always opaque, treat as success
-      });
+    try {
+      // GAS送信
+      await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
+    } catch (err) {
+      console.warn('GAS submit error:', err);
+    }
+
+    // LINEメッセージ送信
+    await sendLineMessage(fd);
+
+    showDone();
   });
 
   // ── Done screen ──
