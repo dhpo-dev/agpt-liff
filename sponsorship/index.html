@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AGPT 協賛プラン申込フォーム</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js" charset="utf-8"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -160,12 +160,15 @@
   .plan.on[data-p="premium"]  .dot::after { background: var(--plan-premium); }
 
   .plan-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.5px; }
-  .plan-price { font-size: 19px; font-weight: 700; margin-bottom: 1px; }
-  .plan-tax { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; }
-  .plan-feat { font-size: 11px; color: var(--text-sub); line-height: 1.7; }
+  .plan-price-row {
+    display: flex; align-items: baseline; justify-content: center; gap: 4px; margin-bottom: 8px;
+  }
+  .plan-price { font-size: 19px; font-weight: 700; }
+  .plan-tax { font-size: 11px; color: var(--text-muted); }
+  .plan-feat { font-size: 13px; font-weight: 400; color: var(--text-sub); line-height: 1.8; }
   .plan-slots {
-    display: inline-block; font-size: 12px; font-weight: 600;
-    padding: 3px 14px; border-radius: 20px; margin-top: 8px;
+    display: inline-block; font-size: 13px; font-weight: 600;
+    padding: 4px 16px; border-radius: 20px; margin-top: 8px;
   }
 
   .plan[data-p="basic"]    .plan-name, .plan[data-p="basic"]    .plan-price { color: var(--plan-basic); }
@@ -185,9 +188,9 @@
 
   /* ── Terms ── */
   .terms-box {
-    max-height: 150px; overflow-y: auto; padding: 14px;
+    max-height: 360px; overflow-y: auto; padding: 18px;
     background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: var(--radius);
-    font-size: 11px; line-height: 1.8; color: var(--text-muted); margin-bottom: 16px;
+    font-size: 12px; line-height: 1.9; color: var(--text-muted); margin-bottom: 16px;
   }
   .terms-box::-webkit-scrollbar { width: 4px; }
   .terms-box::-webkit-scrollbar-track { background: transparent; }
@@ -379,20 +382,18 @@
           <input type="radio" name="plan" value="ベーシック（20万円）" required>
           <div class="dot"></div>
           <div class="plan-name">ベーシック</div>
-          <div class="plan-price">¥200,000</div>
-          <div class="plan-tax">（税別）</div>
+          <div class="plan-price-row"><span class="plan-price">¥200,000</span><span class="plan-tax">（税別）</span></div>
           <div class="plan-feat">HPロゴ掲載（小）</div>
-          <div class="plan-slots">招待枠 10</div>
+          <div class="plan-slots">招待チケット 10枚</div>
         </label>
 
         <label class="plan" data-p="light">
           <input type="radio" name="plan" value="ライト（52.5万円）" required>
           <div class="dot"></div>
           <div class="plan-name">ライト</div>
-          <div class="plan-price">¥525,000</div>
-          <div class="plan-tax">（税別）</div>
+          <div class="plan-price-row"><span class="plan-price">¥525,000</span><span class="plan-tax">（税別）</span></div>
           <div class="plan-feat">HPロゴ掲載（小）</div>
-          <div class="plan-slots">招待枠 30</div>
+          <div class="plan-slots">招待チケット 30枚</div>
         </label>
 
         <label class="plan" data-p="standard">
@@ -400,20 +401,18 @@
           <div class="dot"></div>
           <span class="badge" style="background:var(--plan-standard);">おすすめ</span>
           <div class="plan-name">スタンダード</div>
-          <div class="plan-price">¥750,000</div>
-          <div class="plan-tax">（税別）</div>
+          <div class="plan-price-row"><span class="plan-price">¥750,000</span><span class="plan-tax">（税別）</span></div>
           <div class="plan-feat">HPロゴ掲載（大）</div>
-          <div class="plan-slots">招待枠 60</div>
+          <div class="plan-slots">招待チケット 60枚</div>
         </label>
 
         <label class="plan" data-p="premium">
           <input type="radio" name="plan" value="プレミアム（140万円）" required>
           <div class="dot"></div>
           <div class="plan-name">プレミアム</div>
-          <div class="plan-price">¥1,400,000</div>
-          <div class="plan-tax">（税別）</div>
+          <div class="plan-price-row"><span class="plan-price">¥1,400,000</span><span class="plan-tax">（税別）</span></div>
           <div class="plan-feat">HPロゴ掲載（大）・会場ロゴ掲載</div>
-          <div class="plan-slots">招待枠 60</div>
+          <div class="plan-slots">招待チケット 100枚</div>
         </label>
 
       </div>
@@ -548,25 +547,38 @@
   };
 
   // ── LIFF Init ──
-  liff.init({ liffId: LIFF_ID }).then(() => {
-    try {
-      const ctx = liff.getContext();
-      if (ctx && ctx.userId) {
-        document.getElementById('userId').value = ctx.userId;
-      }
-    } catch (e) {
-      // fallback: try getProfile
+  function initLiff() {
+    if (typeof liff === 'undefined') {
+      console.warn('LIFF SDK not loaded. Running in standalone mode.');
+      return;
     }
-    if (liff.isLoggedIn()) {
-      liff.getProfile().then(profile => {
-        if (profile && profile.userId) {
-          document.getElementById('userId').value = profile.userId;
+    liff.init({ liffId: LIFF_ID }).then(() => {
+      try {
+        const ctx = liff.getContext();
+        if (ctx && ctx.userId) {
+          document.getElementById('userId').value = ctx.userId;
         }
-      }).catch(() => {});
-    }
-  }).catch(err => {
-    console.error('LIFF init error:', err);
-  });
+      } catch (e) {
+        // fallback: try getProfile
+      }
+      if (liff.isLoggedIn()) {
+        liff.getProfile().then(profile => {
+          if (profile && profile.userId) {
+            document.getElementById('userId').value = profile.userId;
+          }
+        }).catch(() => {});
+      }
+    }).catch(err => {
+      console.warn('LIFF init error:', err);
+    });
+  }
+
+  // Wait for DOM and SDK to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLiff);
+  } else {
+    initLiff();
+  }
 
   // ── DOM refs ──
   const form = document.getElementById('f');
@@ -667,8 +679,12 @@
     confirmOverlay.classList.remove('show');
     doneScreen.classList.add('show');
     setTimeout(() => {
-      if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
-        liff.closeWindow();
+      try {
+        if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
+          liff.closeWindow();
+        }
+      } catch (e) {
+        console.warn('closeWindow error:', e);
       }
     }, 3000);
   }
