@@ -526,7 +526,7 @@
 
 <script>
   // ── LIFF Config ──
-  const LIFF_ID = '2009575513-bf0DhX1A';
+  const LIFF_ID = '2009575513-bf0DhXlA';
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
 
   // ── Field labels for confirm screen ──
@@ -659,11 +659,7 @@
     params.append('agreedAt', new Date().toISOString());
 
     try {
-      const res = await fetch(GAS_URL + '?' + params.toString());
-      const data = await res.json();
-      if (data.error) {
-        console.warn('GAS error:', data.error);
-      }
+      await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
     } catch (err) {
       console.warn('GAS submit error:', err);
     }
