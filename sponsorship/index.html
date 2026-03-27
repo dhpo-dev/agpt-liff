@@ -525,162 +525,126 @@
 </div>
 
 <script>
-  // ── LIFF Config ──
-  const LIFF_ID = '2009575513-bf0DhXlA';
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
+    const LIFF_ID = '2009575513-bf0DhXlA';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxg9ZXqESvj3zM452178zTVdMH5BRPa9obpL66h7xraK-KVJtuwPU532zH74d1oBLjD/exec';
 
-  // ── Field labels for confirm screen ──
-  const fieldLabels = {
-    storeName: '店舗名',
-    phone: '電話番号',
-    email: 'メールアドレス',
-    plan: '協賛プラン',
-    zip: '郵便番号',
-    address: '住所',
-    note: '備考'
-  };
+    const fieldLabels = {
+      storeName: '店舗名',
+      phone: '電話番号',
+      email: 'メールアドレス',
+      plan: '協賛プラン',
+      zip: '郵便番号',
+      address: '住所',
+      note: '備考'
+    };
 
-  // ── LIFF Init ──
-  function initLiff() {
-    if (typeof liff === 'undefined') {
-      console.warn('LIFF SDK not loaded. Running in standalone mode.');
-      return;
-    }
-    liff.init({ liffId: LIFF_ID }).then(() => {
+    // ===== LIFF初期化（旧コードと同じasync/awaitパターン） =====
+    async function init() {
       try {
-        const ctx = liff.getContext();
+        await liff.init({ liffId: LIFF_ID });
+        var ctx = liff.getContext();
         if (ctx && ctx.userId) {
           document.getElementById('userId').value = ctx.userId;
+        } else if (liff.isLoggedIn()) {
+          var profile = await liff.getProfile();
+          document.getElementById('userId').value = profile.userId;
         }
-      } catch (e) {
-        // fallback: try getProfile
-      }
-      if (liff.isLoggedIn()) {
-        liff.getProfile().then(profile => {
-          if (profile && profile.userId) {
-            document.getElementById('userId').value = profile.userId;
-          }
-        }).catch(() => {});
-      }
-    }).catch(err => {
-      console.warn('LIFF init error:', err);
-    });
-  }
-
-  // Wait for DOM and SDK to be ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLiff);
-  } else {
-    initLiff();
-  }
-
-  // ── DOM refs ──
-  const form = document.getElementById('f');
-  const btn = document.getElementById('btn');
-  const confirmOverlay = document.getElementById('confirmOverlay');
-  const confirmBody = document.getElementById('confirmBody');
-  const backBtn = document.getElementById('backBtn');
-  const confirmBtn = document.getElementById('confirmBtn');
-  const spinner = document.getElementById('spinner');
-  const doneScreen = document.getElementById('doneScreen');
-
-  // ── Plan selection ──
-  document.querySelectorAll('.plan').forEach(c => {
-    c.addEventListener('click', () => {
-      document.querySelectorAll('.plan').forEach(p => p.classList.remove('on'));
-      c.classList.add('on');
-      c.querySelector('input[type="radio"]').checked = true;
-      validate();
-    });
-  });
-
-  // ── Validation ──
-  function validate() {
-    let ok = true;
-    form.querySelectorAll('[required]').forEach(el => {
-      if (el.type === 'checkbox' && !el.checked) ok = false;
-      else if (el.type === 'radio') {
-        if (![...form.querySelectorAll('input[name="' + el.name + '"]')].some(r => r.checked)) ok = false;
-      }
-      else if (!el.value.trim()) ok = false;
-    });
-    btn.disabled = !ok;
-  }
-
-  form.addEventListener('input', validate);
-  form.addEventListener('change', validate);
-
-  // ── Form submit → show confirm overlay ──
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    showConfirm();
-  });
-
-  function showConfirm() {
-    const fd = new FormData(form);
-    let html = '';
-    for (const key in fieldLabels) {
-      const val = fd.get(key) || '';
-      if (val) {
-        html += '<div class="confirm-row">'
-          + '<div class="confirm-label">' + fieldLabels[key] + '</div>'
-          + '<div class="confirm-value">' + escHtml(val) + '</div>'
-          + '</div>';
-      }
-    }
-    confirmBody.innerHTML = html;
-    confirmOverlay.classList.add('show');
-  }
-
-  function escHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  // ── Back button ──
-  backBtn.addEventListener('click', () => {
-    confirmOverlay.classList.remove('show');
-  });
-
-  // ── Confirm → submit to GAS (GAS側でLINEメッセージも送信) ──
-  confirmBtn.addEventListener('click', async () => {
-    confirmBtn.disabled = true;
-    backBtn.style.display = 'none';
-    spinner.classList.add('show');
-
-    const fd = new FormData(form);
-    const params = new URLSearchParams();
-    for (const [k, v] of fd.entries()) {
-      params.append(k, v);
-    }
-    params.append('action', 'apply');
-    params.append('agreedToTerms', 'true');
-    params.append('agreedAt', new Date().toISOString());
-
-    try {
-      await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
-    } catch (err) {
-      console.warn('GAS submit error:', err);
+      } catch (e) { /* init error */ }
     }
 
-    showDone();
-  });
+    // ===== 同意チェック → ボタン有効化 =====
+    const agreeCheck = document.getElementById('agreeCheck');
+    const submitBtn = document.getElementById('btn');
+    agreeCheck.addEventListener('change', () => {
+      submitBtn.disabled = !agreeCheck.checked;
+    });
 
-  // ── Done screen ──
-  function showDone() {
-    confirmOverlay.classList.remove('show');
-    doneScreen.classList.add('show');
-    setTimeout(() => {
+    // ===== バリデーション =====
+    const form = document.getElementById('f');
+    function validate() {
+      let ok = true;
+      form.querySelectorAll('[required]').forEach(el => {
+        if (el.type === 'checkbox' && !el.checked) ok = false;
+        else if (el.type === 'radio') {
+          if (![...form.querySelectorAll('input[name="' + el.name + '"]')].some(r => r.checked)) ok = false;
+        }
+        else if (!el.value.trim()) ok = false;
+      });
+      submitBtn.disabled = !ok;
+    }
+    form.addEventListener('input', validate);
+    form.addEventListener('change', validate);
+
+    // ===== プラン選択 =====
+    document.querySelectorAll('.plan').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.plan').forEach(p => p.classList.remove('on'));
+        c.classList.add('on');
+        c.querySelector('input[type="radio"]').checked = true;
+        validate();
+      });
+    });
+
+    // ===== フォーム送信 → 確認画面表示 =====
+    const confirmOverlay = document.getElementById('confirmOverlay');
+    const confirmBody = document.getElementById('confirmBody');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      let html = '';
+      for (const [key, label] of Object.entries(fieldLabels)) {
+        const val = data.get(key) || '';
+        if (val) {
+          html += '<div class="confirm-row">'
+            + '<div class="confirm-label">' + label + '</div>'
+            + '<div class="confirm-value">' + escHtml(val) + '</div>'
+            + '</div>';
+        }
+      }
+      confirmBody.innerHTML = html;
+      confirmOverlay.classList.add('show');
+    });
+
+    function escHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    // ===== 「修正する」ボタン =====
+    document.getElementById('backBtn').addEventListener('click', () => {
+      confirmOverlay.classList.remove('show');
+    });
+
+    // ===== 「申込を確定する」ボタン → GAS送信（旧コードと同じパターン） =====
+    document.getElementById('confirmBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('confirmBtn');
+      btn.disabled = true;
+      document.getElementById('backBtn').style.display = 'none';
+      document.getElementById('spinner').classList.add('show');
+
+      const params = new URLSearchParams(new FormData(form));
+      params.append('action', 'apply');
+      params.append('agreedToTerms', 'true');
+      params.append('agreedAt', new Date().toISOString());
+
       try {
-        if (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient()) {
-          liff.closeWindow();
-        }
-      } catch (e) {
-        console.warn('closeWindow error:', e);
+        // GASにデータ送信（GAS側でpushMessageも実行される）
+        await fetch(GAS_URL + '?' + params.toString(), { mode: 'no-cors' });
+
+        // 完了画面を表示
+        confirmOverlay.classList.remove('show');
+        document.getElementById('doneScreen').classList.add('show');
+        setTimeout(() => { if (liff.isInClient()) liff.closeWindow(); }, 3000);
+      } catch (err) {
+        btn.disabled = false;
+        document.getElementById('backBtn').style.display = '';
+        document.getElementById('spinner').classList.remove('show');
       }
-    }, 3000);
-  }
-</script>
+    });
+
+    init();
+  </script>
 </body>
 </html>
